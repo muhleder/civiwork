@@ -651,6 +651,9 @@ function drupal_error_handler($errno, $message, $filename, $line, $context) {
         }
       }
     }
+    if (!function_exists('filter_xss')) {
+      drupal_load('module', 'filter');
+    }
 
     $entry = check_plain($types[$errno]) .': '. filter_xss($message) .' in '. check_plain($filename) .' on line '. check_plain($line) .'.';
 
