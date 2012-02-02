@@ -453,6 +453,18 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                     $errorMsg['confirm_from_email'] = ts('Please enter Confirmation Email FROM Email Address.');
                 }
             }
+            //check that the selected profiles have either firstname+lastname or email required
+            $profileFields = array();
+            $profileIds = array(
+              CRM_Utils_Array::value('custom_pre_id', $values),
+              CRM_Utils_Array::value('custom_post_id', $values)
+            );
+            foreach($profileIds as $profileId) {
+              if ($profileId) {
+                $profileFields = array_merge($profileFields, CRM_Core_BAO_UFGroup::getFields($profileId));
+              }
+            }
+
             $additionalCustomPreId = $additionalCustomPostId = null;
             $isPreError = $isPostError = true;
             if ( CRM_Utils_Array::value( 'allow_same_participant_emails', $values ) &&
