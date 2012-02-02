@@ -454,16 +454,35 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 }
             }
             //check that the selected profiles have either firstname+lastname or email required
-            $profileFields = array();
+            $isProfileError = TRUE;
+            $profileReqFields = array();
             $profileIds = array(
-              CRM_Utils_Array::value('custom_pre_id', $values),
-              CRM_Utils_Array::value('custom_post_id', $values)
+                CRM_Utils_Array::value('custom_pre_id', $values),
+                CRM_Utils_Array::value('custom_post_id', $values)
             );
             foreach($profileIds as $profileId) {
-              if ($profileId) {
-                $profileFields = array_merge($profileFields, CRM_Core_BAO_UFGroup::getFields($profileId));
-              }
+                if ($profileId) {
+                    $tmpFields = CRM_Core_BAO_UFGroup::getFields($profileId);
+                    foreach ($tmpFields as $tmpField) {
+                        if ($tmpField['is_required'])  {
+                            switch (TRUE) {
+                                case substr_count($tmpField['name'], 'email'):
+                                    $profileReqFields[] = 'email';
+                                    break;
+                                case substr_count($tmpField['name'], 'first_name'):
+                                    $profileReqFields[] = 'first_name';
+                                    break;
+                                case substr_count($tmpField['name'], 'last_name'):
+                                    $profileReqFields[] = 'last_name';
+                                    break;
+                            }
+                        }
+                    }
+                }
             }
+            if (in_array('email', $profileReqFields)
+                || (in_array('first_name', $profileReqFields) && in_array('last_name', $profileReqFields))
+            ) {$isProfileError = FALSE;}
 
             $additionalCustomPreId = $additionalCustomPostId = null;
             $isPreError = $isPostError = true;
