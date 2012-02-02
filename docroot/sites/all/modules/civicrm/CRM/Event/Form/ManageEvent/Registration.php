@@ -543,6 +543,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 if ( $isPostError ) {
                     $errorMsg['additional_custom_post_id'] = ts("Allow multiple registrations from the same email address requires a profile of type 'Individual'");
                 }
+                if ($isProfileError) {
+                    $errorMsg['custom_pre_id'] = ts("Please include a Profile for online registration that contains a required Email Address field and / or required First Name + Last Name fields.");
+                }
             }  
             
             // // CRM-8485
