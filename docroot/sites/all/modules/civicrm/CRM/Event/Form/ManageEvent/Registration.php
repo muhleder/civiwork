@@ -121,6 +121,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                                    'module'       => 'CiviEvent',
                                    'entity_id'    => $eventId );
 
+            // TODO make 'online event registration' the default option for the 'custom_pre_id' option
             list( $defaults['custom_pre_id'],
                   $defaults['custom_post'] ) = 
                 CRM_Core_BAO_UFJoin::getUFGroupIds( $ufJoinParams );
