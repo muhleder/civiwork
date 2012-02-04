@@ -471,6 +471,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
             }
             $isProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($profileIds);
             $isAdditionalProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($additionalProfileIds);
+            // TODO check all profiles have email address set if 'send confirmation email' is checked
             $additionalCustomPreId = $additionalCustomPostId = null;
             $isPreError = $isPostError = true;
             if ( CRM_Utils_Array::value( 'allow_same_participant_emails', $values ) &&
