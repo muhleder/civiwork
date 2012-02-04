@@ -454,36 +454,11 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 }
             }
             //check that the selected profiles have either firstname+lastname or email required
-            $isProfileError = TRUE;
-            $profileReqFields = array();
             $profileIds = array(
                 CRM_Utils_Array::value('custom_pre_id', $values),
                 CRM_Utils_Array::value('custom_post_id', $values)
             );
-            foreach($profileIds as $profileId) {
-                if ($profileId) {
-                    $tmpFields = CRM_Core_BAO_UFGroup::getFields($profileId);
-                    foreach ($tmpFields as $tmpField) {
-                        if ($tmpField['is_required'])  {
-                            switch (TRUE) {
-                                case substr_count($tmpField['name'], 'email'):
-                                    $profileReqFields[] = 'email';
-                                    break;
-                                case substr_count($tmpField['name'], 'first_name'):
-                                    $profileReqFields[] = 'first_name';
-                                    break;
-                                case substr_count($tmpField['name'], 'last_name'):
-                                    $profileReqFields[] = 'last_name';
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-            if (in_array('email', $profileReqFields)
-                || (in_array('first_name', $profileReqFields) && in_array('last_name', $profileReqFields))
-            ) {$isProfileError = FALSE;}
-
+            $isProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($profileIds);
             $additionalCustomPreId = $additionalCustomPostId = null;
             $isPreError = $isPostError = true;
             if ( CRM_Utils_Array::value( 'allow_same_participant_emails', $values ) &&
@@ -543,7 +518,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 if ( $isPostError ) {
                     $errorMsg['additional_custom_post_id'] = ts("Allow multiple registrations from the same email address requires a profile of type 'Individual'");
                 }
-                if ($isProfileError) {
+                if (!$isProfileComplete) {
                     $errorMsg['custom_pre_id'] = ts("Please include a Profile for online registration that contains a required Email Address field and / or required First Name + Last Name fields.");
                 }
             }  
@@ -593,6 +568,38 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         }        
         
         return true;
+    }
+
+    /**
+     * Check if a profile contains required fields
+     *
+     * @return boolean
+     */
+    static function isProfileComplete($profileIds) {
+        $profileReqFields = array();
+        foreach ($profileIds as $profileId) {
+            if ($profileId) {
+                $fields = CRM_Core_BAO_UFGroup::getFields($profileId);
+                foreach ($fields as $field) {
+                    if ($field['is_required']) {
+                        switch (TRUE) {
+                            case substr_count($field['name'], 'email'):
+                                $profileReqFields[] = 'email';
+                                break;
+                            case substr_count($field['name'], 'first_name'):
+                                $profileReqFields[] = 'first_name';
+                                break;
+                            case substr_count($field['name'], 'last_name'):
+                                $profileReqFields[] = 'last_name';
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        $profileComplete = (in_array('email', $profileReqFields)
+                || (in_array('first_name', $profileReqFields) && in_array('last_name', $profileReqFields)));
+        return $profileComplete;
     }
     
     /**
