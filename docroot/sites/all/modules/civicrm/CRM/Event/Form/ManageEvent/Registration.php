@@ -339,7 +339,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         $profiles = CRM_Core_BAO_UFGroup::getProfiles( $types );
         
         $mainProfiles = array('' => ts('- select -')) + $profiles;
-        $addtProfiles = array('' => ts('- same as for main contact -'), 'none' => ts('- no profile -')) + $profiles;
+        $addtProfiles = array('' => ts('- same as for main contact -')) + $profiles;
 
         $form->add('select', 'custom_pre_id',             ts('Include Profile') . '<br />' . ts('(top of page)'),    $mainProfiles);
         $form->add('select', 'custom_post_id',            ts('Include Profile') . '<br />' . ts('(bottom of page)'), $mainProfiles);
@@ -356,7 +356,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         $profiles = CRM_Core_BAO_UFGroup::getProfiles( $types );
         
         if ( $prefix == 'additional_' ) {
-            $mainProfiles = array('' => ts('- same as for main contact -'), 'none' => ts('- no profile -')) + $profiles;
+            $mainProfiles = array('' => ts('- same as for main contact -')) + $profiles;
         } else {
             $mainProfiles = array('' => ts('- select -')) + $profiles;
         }
