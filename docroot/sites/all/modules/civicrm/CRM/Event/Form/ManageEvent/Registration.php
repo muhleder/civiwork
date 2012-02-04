@@ -458,7 +458,12 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 CRM_Utils_Array::value('custom_pre_id', $values),
                 CRM_Utils_Array::value('custom_post_id', $values)
             );
+            $additionalProfileIds = array(
+                CRM_Utils_Array::value('additional_custom_pre_id', $values),
+                CRM_Utils_Array::value('additional_custom_post_id', $values)
+            );
             $isProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($profileIds);
+            $isAdditionalProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($additionalProfileIds);
             $additionalCustomPreId = $additionalCustomPostId = null;
             $isPreError = $isPostError = true;
             if ( CRM_Utils_Array::value( 'allow_same_participant_emails', $values ) &&
@@ -518,8 +523,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 if ( $isPostError ) {
                     $errorMsg['additional_custom_post_id'] = ts("Allow multiple registrations from the same email address requires a profile of type 'Individual'");
                 }
-                if (!$isProfileComplete) {
-                    $errorMsg['custom_pre_id'] = ts("Please include a Profile for online registration that contains a required Email Address field and / or required First Name + Last Name fields.");
+                if (!$isProfileComplete || !$isAdditionalProfileComplete) {
+                    $errorMsg['additional_custom_pre_id'] = ts("Please include a Profile for online registration that contains a required Email Address field and / or required First Name + Last Name fields.");
                 }
             }  
             
