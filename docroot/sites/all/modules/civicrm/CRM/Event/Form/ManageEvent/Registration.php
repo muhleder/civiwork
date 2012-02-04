@@ -462,7 +462,13 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 CRM_Utils_Array::value('additional_custom_pre_id', $values),
                 CRM_Utils_Array::value('additional_custom_post_id', $values)
             );
-            // TODO check if additional profile fields have been set as 'same as main'
+            //additional profile fields default to main if not set
+            if (!is_numeric($additionalProfileIds[0])) {
+                $additionalProfileIds[0] =  $profileIds[0];
+            }
+            if (!is_numeric($additionalProfileIds[1])) {
+                $additionalProfileIds[0] = $profileIds[0];
+            }
             $isProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($profileIds);
             $isAdditionalProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($additionalProfileIds);
             $additionalCustomPreId = $additionalCustomPostId = null;
@@ -584,7 +590,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     static function isProfileComplete($profileIds) {
         $profileReqFields = array();
         foreach ($profileIds as $profileId) {
-            if ($profileId) {
+            if ($profileId && is_numeric($profileId)) {
                 $fields = CRM_Core_BAO_UFGroup::getFields($profileId);
                 foreach ($fields as $field) {
                     if ($field['is_required']) {
