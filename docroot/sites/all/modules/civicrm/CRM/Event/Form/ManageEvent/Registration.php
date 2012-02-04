@@ -462,6 +462,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 CRM_Utils_Array::value('additional_custom_pre_id', $values),
                 CRM_Utils_Array::value('additional_custom_post_id', $values)
             );
+            // TODO check if additional profile fields have been set as 'same as main'
             $isProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($profileIds);
             $isAdditionalProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($additionalProfileIds);
             $additionalCustomPreId = $additionalCustomPostId = null;
