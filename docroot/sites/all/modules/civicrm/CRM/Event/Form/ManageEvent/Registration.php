@@ -454,6 +454,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
                 }
             }
             //check that the selected profiles have either firstname+lastname or email required
+            $profileFields = array('custom_post_id_multiple', 'additional_custom_post_id_multiple');
             $profileIds = array(
                 CRM_Utils_Array::value('custom_pre_id', $values),
                 CRM_Utils_Array::value('custom_post_id', $values)
@@ -469,6 +470,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
             if (!is_numeric($additionalProfileIds[1])) {
                 $additionalProfileIds[0] = $profileIds[0];
             }
+            //add multiple profiles if set
+            self::addMultipleProfiles($profileIds, $values, 'custom_post_id_multiple');
+            self::addMultipleProfiles($additionalProfileIds, $values, 'additional_custom_post_id_multiple');
             $isProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($profileIds);
             $isAdditionalProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($additionalProfileIds);
             // TODO check all profiles have email address set if 'send confirmation email' is checked
@@ -616,6 +620,18 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         $profileComplete = (in_array('email', $profileReqFields)
                 || (in_array('first_name', $profileReqFields) && in_array('last_name', $profileReqFields)));
         return $profileComplete;
+    }
+
+    /**
+     * Add additional profiles from the form to an array of profile ids.
+     *
+     */
+    static function addMultipleProfiles(&$profileIds, $values, $field) {
+        if ($multipleProfiles = CRM_Utils_Array::value($field, $values)) {
+            foreach ($multipleProfiles as $profileId) {
+                $profileIds[] = $profileId;
+            }
+        }
     }
     
     /**
