@@ -473,8 +473,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
             //add multiple profiles if set
             self::addMultipleProfiles($profileIds, $values, 'custom_post_id_multiple');
             self::addMultipleProfiles($additionalProfileIds, $values, 'additional_custom_post_id_multiple');
-            $isProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($profileIds);
-            $isAdditionalProfileComplete = CRM_Event_Form_ManageEvent_Registration::isProfileComplete($additionalProfileIds);
+            $isProfileComplete = self::isProfileComplete($profileIds);
+            $isAdditionalProfileComplete = self::isProfileComplete($additionalProfileIds);
             // TODO check all profiles have email address set if 'send confirmation email' is checked
             $additionalCustomPreId = $additionalCustomPostId = null;
             $isPreError = $isPostError = true;
