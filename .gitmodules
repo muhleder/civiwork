@@ -1,0 +1,3 @@
+[submodule "civicrm"]
+      path = docroot/sites/all/modules/civicrm
+      url = git://github.com/muhleder/CRM-9587.git
